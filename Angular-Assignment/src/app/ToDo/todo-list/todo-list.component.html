@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ToDo-List</title>
+        <meta charset="UTF-8">
+        <!-- <link rel="stylesheet" type="text/css" href="css/reset.css">
+        <link rel="stylesheet" type="text/css" href="css/todoList-style.css"> -->
+    </head>
+
+    <body>
+        <section class="todo">
+            <div class="todo-container">
+                <div class="button-container">
+                    <div>
+                        <input type="button" class="head-button left-tbn" value="Add New Task" (click)="addNewTask()">
+                        <input type="button" class="head-button left-tbn" id="done-btn" value="Done"
+                         *ngIf="showDone" (click)="markDone()">
+                    </div>
+                    
+                    <div>
+                        <input type="button" class="right-button head-button" id="delete-btn"
+                         value="Delete" (click)="deleteTodo()" [style.opacity]="deleteOpacity" [disabled]="showDelete">
+                        <select id="category" class="right-button" [(ngModel)]="selectedValue">
+                            <option value="All">All</option>
+                            <option value="Personal">Personal</option>
+                            <option value="Office">Office</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="search by title" placeholder="Search" id="search-box" class="right-button" [(ngModel)]="filterTitle">
+                    </div>
+                </div>
+
+                <table id="todoTable">
+                    <tr id="heading-row">
+                        <th><input type="checkbox" id="head-checkbox" onchange="checkAll()"></th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Start Date</th>
+                        <th>Due Date</th>
+                        <th>Reminder</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                    <tbody id="table">
+                        <tr *ngFor="let obj of todoArray | filterDropdown:selectedValue | filter:filterTitle; let i = index" >
+                           <td><input type="checkbox" class="checkboxes" (click)="checkThat(i)"></td>
+                           <td>{{ obj.title }}</td>
+                           <td>{{ obj.category }}</td>
+                           <td>{{ obj.startDate }}</td>
+                           <td>{{ obj.dueDate }}</td>
+                           <td>{{ obj.reminderDate }}</td>
+                           <td>{{ obj.status }}</td>
+                           <td><button type="button" id="edit_btn" (click)="toEditPage(i)" [disabled]="disableEdit || obj.status == 'Done'">Edit</button></td>
+                           <td><button type="button" [style.opacity]="deleteRowOpacity" class="delTodo" (click)="deleteRow(i)" [disabled]="disableDelete">Delete</button> 
+                           
+                        </tr>
+                        
+                    </tbody>
+
+                </table>
+                <div id="search-message" *ngIf="showEmptyError">
+                    <h1>No task found.</h1>
+                </div>
+            </div><!--todo-container-->
+        </section>
+    </body>
+</html>

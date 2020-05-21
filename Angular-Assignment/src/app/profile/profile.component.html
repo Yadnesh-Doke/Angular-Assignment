@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>User Profile</title>
+        <meta charset="UTF-8">
+    </head>
+
+    <body >
+        <section class="user-profile">
+            <!-- <button id="edit-button" onclick="edit()">Edit</button> -->
+            <div *ngIf="isLoading" style="text-align: center;">
+                <app-loading-spinner></app-loading-spinner>
+            </div>
+            <div class="profile-data" *ngIf="!isLoading">
+                <img [src]="imagePath" id="profile">
+                <input type="file" id="profile-image" (change)="ProfilePic($event)">
+                
+                <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+                    <label for="fname">First Name:</label>
+                    <input type="text" id="fname" formControlName="firstName" #fname>
+                    <span class="error-msg" *ngIf="!fname.valid && fname.touched">
+                        Please enter a your first name!
+                    </span><br><br>
+
+                    <label for="lname">Last Name:</label>
+                    <input type="text" id="lname" formControlName="lastName" #lname>
+                    <span class="error-msg" *ngIf="!lname.valid && lname.touched">
+                        Please enter your last name!
+                    </span><br><br>
+
+                    <label for="gender">Gender:</label>
+                    <span onclick="checkRadio(1)"> <input type="radio" name="gender" value="male" id="male" formControlName="gender" >Male </span>
+                    <span onclick="checkRadio(2)"> <input type="radio" name="gender" value="female" id="female" formControlName="gender" >Female<br><br> </span>
+
+                    <label for="address">Address:</label>
+                    <textarea id="address" formControlName="address" #address></textarea>
+                    <span class="error-msg" *ngIf="!address.valid && address.touched">
+                        Please enter the address!
+                    </span><br><br>
+
+                    <label for="passwd">Password:</label>
+                    <input type="text" id="passwd" formControlName="password" #pswd>
+                    <span class="error-msg" *ngIf="!pswd.valid && pswd.touched || wrongPassword">
+                        <p>Password must contain:</p>
+                       <p>1.At least one uppercase letter</p>
+                       <p>2.at least One lowercase letter</p>
+                       <p>3.at least one digit</p>
+                       <p>4.At least one special symbol.</p>
+                    </span><br><br>
+
+                    <input type="submit" value="Submit" id="submit-btn" [disabled]="!profileForm.valid || wrongPassword">
+                </form>
+            </div>
+        </section>
+    </body>
+</html>

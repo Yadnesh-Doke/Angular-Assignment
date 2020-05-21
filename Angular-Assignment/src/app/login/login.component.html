@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ToDo-Login</title>
+        <meta charset="UTF-8">
+        <!-- <link rel="stylesheet" type="text/css" href="css/reset.css">
+        <link rel="stylesheet" type="text/css" href="css/login-style.css"> -->
+    </head>
+
+    <body>
+        <div class="alert" *ngIf="error">
+            <p> {{ error }} </p>
+        </div>
+        <div *ngIf="isLoading" style="text-align: center;">
+            <app-loading-spinner></app-loading-spinner>
+        </div>
+        <div class="login-form" *ngIf="!isLoading">
+            <h1>WELCOME</h1>
+            <form (ngSubmit)="login(f)" #f="ngForm">
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" placeholder="Enter Email address" name="email" ngModel email required>
+
+                <label for="passwd">Password:</label><br>
+                <input type="password" id="passwd" placeholder="Enter Password" name="password" ngModel minlength="8" required>
+
+                <input type="submit" value="Log in">
+            </form>
+            
+            <p><a routerLink = "/register" class="register-link">Not a registered user? Register here.</a></p>
+        </div>
+    </body>
+</html>
