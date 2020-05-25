@@ -33,7 +33,9 @@ export class ProfileComponent implements OnInit {
     });
     this.imagePath = this.user.imagePath;
     // console.log("imagePath: \n"+this.imagePath);
-    console.log("User: "+this.user);
+    console.log("User: ");
+    console.log(this.user);
+    console.log(this.user.gender);
     this.profileForm = new FormGroup({
       "firstName" : new FormControl(this.user.firstName,Validators.required),
       "lastName" : new FormControl(this.user.lastName,Validators.required),
@@ -52,6 +54,13 @@ export class ProfileComponent implements OnInit {
     if(password.match(ptn))
     {
       this.wrongPassword = false; 
+      this.user.firstName = this.profileForm.value.firstName;
+      this.user.lastName = this.profileForm.value.lastName;
+      this.user.gender = this.profileForm.value.gender;
+      this.user.address = this.profileForm.value.address;
+      this.user.password = password;
+      this.user.imagePath = this.imagePath;
+      this.authService.loggedInUser.next(this.user);
       this.authService.updateData(
         this.profileForm.value.firstName,
         this.profileForm.value.lastName,

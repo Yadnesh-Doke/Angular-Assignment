@@ -14,7 +14,7 @@
             <app-loading-spinner></app-loading-spinner>
         </div>
         <div class="add-task" *ngIf="!isLoading">
-            <form (ngSubmit)="onSubmit()" [formGroup]="editForm">
+            <form (ngSubmit)="onSubmit()" [formGroup]="todoAddForm">
                 <div class="control-container">
                     <label for="title">Title:</label><br>
                     <input type="text" id="title" placeholder="Enter title" formControlName="title" #titleName>
@@ -67,8 +67,8 @@
                     </span>
                 </div>
 
-                <!-- <div class="control-container">
-                    <label>Is Public:</label>
+                <div class="control-container">
+                    <!-- <label>Is Public:</label>
                     <span>
                         <input type="radio" name="isPublic" value="yes" id="publicYes" formControlName="isPublic"
                             (change)="isPublicStatus($event)">Yes
@@ -77,10 +77,11 @@
                         <input type="radio" name="isPublic" value="no" id="publicNo" formControlName="isPublic"
                             (change)="isPublicStatus($event)">No
                     </span>
-                    <br>
-                </div> -->
+                    <br> -->
+                </div>
 
-                <input type="submit" value="Submit" [disabled]="!editForm.valid && editForm.touched">
+                <input type="submit" value="Add" [ngClass]="{'invalid-btn-opacity': !todoAddForm.valid}"
+                 [disabled]="!todoAddForm.valid && todoAddForm.touched">
 
             </form>
         </div>

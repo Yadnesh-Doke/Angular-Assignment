@@ -110,6 +110,10 @@ h1{
     margin-bottom: 50px;
 }
 
+.invalid-btn-opacity{
+    opacity: 0.4;
+}
+
 .register-form h1{
     color: white;
     text-align:center;

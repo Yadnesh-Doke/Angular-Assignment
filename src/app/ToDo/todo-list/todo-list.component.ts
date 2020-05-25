@@ -37,8 +37,8 @@ export class TodoListComponent implements OnInit {
     private headerService: HeaderService) { }
 
   ngOnInit(): void {
-    this.header.profileLink = true;  this.header.todoLink = false;
-    this.header.logoutLink = true;   this.header.loginLink = false;
+    this.header.profileLink = true; this.header.todoLink = false;
+    this.header.logoutLink = true; this.header.loginLink = false;
 
     this.authService.loggedInUser.subscribe(loggedInUser => {
       this.todoArray = loggedInUser.todoArray;
@@ -48,23 +48,23 @@ export class TodoListComponent implements OnInit {
       console.log("Array: \n" + this.todoArray);
     });
 
-  //   this.authService.fetchUsers().subscribe(
-  //     users => {
-  //        this.usersArray = users.map((user) => {
-  //             return {...user,todoArray: user.todoArray ? user.todoArray : []};
-  //         });
-  //         console.log("users array from TODO LIST: ");
-  //         console.log(this.usersArray);
-  //         let currUser = JSON.parse(localStorage.getItem("user"));
-  //         let currentUser = this.usersArray.find(user => user.email === currUser.email);
-  //         console.log("Current user from TODO LIST");
-  //         console.log(currentUser);
-  //         this.todoArray = currentUser.todoArray;
-  //         this.currentUser.next(currentUser);
-  //         this.userIndex = this.usersArray.indexOf(currentUser);
-  //         console.log("Current user index from TODO LIST: "+this.userIndex);
-  //     }
-  // );
+    //   this.authService.fetchUsers().subscribe(
+    //     users => {
+    //        this.usersArray = users.map((user) => {
+    //             return {...user,todoArray: user.todoArray ? user.todoArray : []};
+    //         });
+    //         console.log("users array from TODO LIST: ");
+    //         console.log(this.usersArray);
+    //         let currUser = JSON.parse(localStorage.getItem("user"));
+    //         let currentUser = this.usersArray.find(user => user.email === currUser.email);
+    //         console.log("Current user from TODO LIST");
+    //         console.log(currentUser);
+    //         this.todoArray = currentUser.todoArray;
+    //         this.currentUser.next(currentUser);
+    //         this.userIndex = this.usersArray.indexOf(currentUser);
+    //         console.log("Current user index from TODO LIST: "+this.userIndex);
+    //     }
+    // );
 
   }
 
@@ -98,62 +98,89 @@ export class TodoListComponent implements OnInit {
       this.disable();
       this.showDelete = false;
       this.deleteOpacity = 1;
-      // document.getElementById("delete-btn").style.opacity = 1;
       this.showDone = true;
     }
     else {
       this.enable();
       this.showDelete = true;
       this.deleteOpacity = 0.4;
-      // document.getElementById("delete-btn").style.opacity = 0.4;
       this.showDone = false;
     }
   }
 
-  disable(){
+  checkAll() {
+    let arr = document.querySelectorAll(".checkboxes");
+    let ele;
+    let head_check = document.querySelector("#head-checkbox") as HTMLInputElement;
+    // alert("head-checkbox: \n"+head_check.checked);
+    if (head_check.checked === true) {
+      for (let i = 0; i < arr.length; i++) {
+        ele = arr[i] as HTMLInputElement;
+        ele.checked = true;
+      }
+      this.disable();
+      this.showDelete = false;
+      this.deleteOpacity = 1;
+      this.showDone = true;
+    }
+    else {
+      for (let i = 0; i < arr.length; i++) {
+        ele = arr[i] as HTMLInputElement;
+        ele.checked = false;
+      }
+      this.enable();
+      this.showDelete = true;
+      this.deleteOpacity = 0.4;
+      this.showDone = false;
+    }
+
+  }
+
+  disable() {
     this.disableEditAndDelete = true;
     this.disableEdit = true;
     this.disableDelete = true;
     this.deleteRowOpacity = 0.4;
   }
 
-  enable(){
+  enable() {
     this.disableEditAndDelete = false;
     this.disableEdit = false;
     this.disableDelete = false;
     this.deleteRowOpacity = 1;
   }
 
-  markDone(){
+  markDone() {
     let arr = document.querySelectorAll(".checkboxes");
-    for (let i = 0; i < arr.length; i++)
-    {
+    for (let i = 0; i < arr.length; i++) {
       let ele = arr[i] as HTMLInputElement;
-      if (ele.checked == true)
-      {
+      if (ele.checked == true) {
         this.todoService.markAsDone(i);
         ele.checked = false;
         this.enable();
         this.showDone = false;
+        this.showDelete = true;
+        let head_check = document.querySelector("#head-checkbox") as HTMLInputElement;
+        head_check.checked = true ? false : false;
       }
     }
   }
 
-  deleteTodo(){
+  deleteTodo() {
     let arr = document.querySelectorAll(".checkboxes");
     this.todoService.deleteMultiple(arr);
     console.log("done deleting multiple");
-    for (let i = 0; i < arr.length; i++)
-    {
+    for (let i = 0; i < arr.length; i++) {
       let ele = arr[i] as HTMLInputElement;
-      if (ele.checked == true)
-      {
+      if (ele.checked == true) {
         ele.checked = false;
         this.enable();
         this.showDone = false;
+        this.showDelete = true;
+        let head_check = document.querySelector("#head-checkbox") as HTMLInputElement;
+        head_check.checked = true ? false : false;
       }
     }
-    
   }
 
 }

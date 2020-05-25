@@ -30,7 +30,9 @@ export class LoginComponent implements OnInit {
   }
 
   login(form: NgForm) {
+    this.error = null;
     console.log("from login: " + form.value);
+    
     this.authService.fetchUsers().subscribe(
       users => {
         this.usersArray = users.map((user) => {
@@ -39,10 +41,9 @@ export class LoginComponent implements OnInit {
         console.log("users array: ");
         // this.usersChanged.next(this.usersArray.slice());
         console.log(this.usersArray);
-
+        this.isLoading = true;
         let email = form.value.email;
         let password = form.value.password;
-        this.isLoading = true;
         this.authService.login(email, password).subscribe(
           response => {
             console.log("login successful!");

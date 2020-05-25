@@ -14,12 +14,12 @@
             <app-loading-spinner></app-loading-spinner>
         </div>
         <div class="add-task" *ngIf="!isLoading">
-            <form (ngSubmit)="onSubmit()" [formGroup]="todoAddForm">
+            <form (ngSubmit)="onSubmit()" [formGroup]="editForm">
                 <div class="control-container">
                     <label for="title">Title:</label><br>
                     <input type="text" id="title" placeholder="Enter title" formControlName="title" #titleName>
-                    <span class="error-msg" *ngIf="!titleName.valid && titleName.touched">
-                        Please enter a your first name!
+                    <span class="error-msg" *ngIf="!editForm.controls.title.valid && editForm.controls.title.touched">
+                        Please enter the title!
                     </span>
                 </div>
                 
@@ -67,8 +67,8 @@
                     </span>
                 </div>
 
-                <div class="control-container">
-                    <!-- <label>Is Public:</label>
+                <!-- <div class="control-container">
+                    <label>Is Public:</label>
                     <span>
                         <input type="radio" name="isPublic" value="yes" id="publicYes" formControlName="isPublic"
                             (change)="isPublicStatus($event)">Yes
@@ -77,10 +77,11 @@
                         <input type="radio" name="isPublic" value="no" id="publicNo" formControlName="isPublic"
                             (change)="isPublicStatus($event)">No
                     </span>
-                    <br> -->
-                </div>
+                    <br>
+                </div> -->
 
-                <input type="submit" value="Add" [disabled]="!todoAddForm.valid && todoAddForm.touched">
+                <input type="submit" value="Submit" [ngClass]="{'invalid-btn-opacity': !editForm.valid}"
+                 [disabled]="!editForm.valid && editForm.touched">
 
             </form>
         </div>

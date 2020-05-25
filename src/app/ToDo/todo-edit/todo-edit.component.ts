@@ -141,7 +141,7 @@ export class TodoEditComponent implements OnInit {
                     // this.editForm.value.isPublic,
                     "Pending");
     this.todoService.updateTask(this.editIndex,task);
-    this.router.navigate(["/todoList"]);
+    // this.router.navigate(["/todoList"]);
   }
 
 }

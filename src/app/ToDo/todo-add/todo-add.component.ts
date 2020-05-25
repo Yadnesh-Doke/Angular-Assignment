@@ -40,7 +40,7 @@ export class TodoAddComponent implements OnInit {
       "category" : new FormControl("Office",Validators.required),
       "startDate" : new FormControl(null,Validators.required),
       "dueDate" : new FormControl(null,Validators.required),
-      "reminderValue" : new FormControl("No",Validators.required),
+      "reminderValue" : new FormControl("no",Validators.required),
       "reminderDate" : new FormControl(null),
       // "isPublic" : new FormControl("No",Validators.required)
     });
@@ -120,7 +120,7 @@ export class TodoAddComponent implements OnInit {
                     "Pending");
 
     this.todoService.addTaskToArray(task);
-    this.router.navigate(["/todoList"]);
+    // this.router.navigate(["/todoList"]);
   }
 
 }

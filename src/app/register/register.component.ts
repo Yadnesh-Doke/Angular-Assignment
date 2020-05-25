@@ -14,7 +14,7 @@ import { HeaderService } from '../services/header-service.service';
 export class RegisterComponent implements OnInit {
   @ViewChild('submitBtn', { static: true }) submitBtn: ElementRef;
   @ViewChild("confirmPassword") confirmPassword: ElementRef;
-  gender: string = null;
+  gender: string = "male";
   imgdata;
   wrongPassword = false;
   diffPassword = false;
@@ -44,6 +44,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
+    this.error = null;
     console.log(form);
     let email = form.value.email;
     let fname = form.value.firstName;
@@ -51,6 +52,8 @@ export class RegisterComponent implements OnInit {
     let address = form.value.address;
     let imagePath = this.imgdata;
     let password = form.value.password;
+    // this.gender = form.controls['gender'].value;
+    console.log("gender from register: "+this.gender);
     let confirmPassword = this.confirmPassword.nativeElement.value;
 
     console.log(form.value);
@@ -83,10 +86,13 @@ export class RegisterComponent implements OnInit {
       }
       else {
         this.wrongPassword = true;
+        this.isLoading = false;
       }
     }
     else {
+      this.wrongPassword = false;
       this.diffPassword = true;
+      this.isLoading = false;
     }
  }
 
@@ -101,7 +107,7 @@ export class RegisterComponent implements OnInit {
     imagereader.onload = () => {
       this.imgdata = imagereader.result;
       (<HTMLImageElement>document.getElementById("profile")).src = this.imgdata;
-      console.log(this.imgdata);
+      // console.log(this.imgdata);
     };
   }
 
