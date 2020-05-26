@@ -11,7 +11,8 @@ export class User {
         public password: string,
         public todoArray: Task[],
         public token: string,
-        public expirationDate: Date,
-        public loginStatus: boolean = false)
+        public expirationDate: Date
+        //public loginStatus: boolean = false)
+        )
     {}
 }

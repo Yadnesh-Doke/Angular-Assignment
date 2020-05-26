@@ -17,6 +17,8 @@ import { HeaderService } from 'src/app/services/header-service.service';
 })
 export class TodoEditComponent implements OnInit {
   editForm: FormGroup;
+  usersArray: User[] = [];
+  userIndex: number;
   today;
   minDate;
   maxRemDate;
@@ -62,6 +64,21 @@ export class TodoEditComponent implements OnInit {
     this.setRanges();
     this.createForm();
    
+    this.authService.fetchUsers().subscribe(
+      users => {
+        this.usersArray = users.map((user) => {
+          return { ...user, todoArray: user.todoArray ? user.todoArray : [] };
+        });
+        console.log("users array from TODO LIST: ");
+        console.log(this.usersArray);
+        let currUser = JSON.parse(localStorage.getItem("user"));
+        let currentUser = this.usersArray.find(user => user.email === currUser.email);
+        console.log("Current user from TODO LIST");
+        console.log(currentUser);
+        this.userIndex = this.usersArray.indexOf(currentUser);
+        console.log("Current user index from TODO ADD: " + this.userIndex);
+      }
+    );
   }
 
   setRanges(){
@@ -141,6 +158,8 @@ export class TodoEditComponent implements OnInit {
                     // this.editForm.value.isPublic,
                     "Pending");
     this.todoService.updateTask(this.editIndex,task);
+    this.usersArray[this.userIndex].todoArray[this.editIndex] = task;
+    this.todoService.sendDataToServer(this.usersArray);
     // this.router.navigate(["/todoList"]);
   }
 

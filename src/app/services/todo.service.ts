@@ -46,17 +46,17 @@ export class TodoService {
         console.log(task);
         this.loggedInUser.todoArray.push(task);
         //this.currentUser.todoArray.push(task);
-        console.log("this.usersArray[this.userIndex].todoArray: ");
-        console.log(this.usersArray[this.userIndex].todoArray)
-        this.usersArray[this.userIndex].todoArray.push(task);
+        // console.log("this.usersArray[this.userIndex].todoArray: ");
+        // console.log(this.usersArray[this.userIndex].todoArray)
+        // this.usersArray[this.userIndex].todoArray.push(task);
         console.log("\nafter a task added:");
         console.log(this.loggedInUser.todoArray);
         // console.log(this.loggedInUser);
-        console.log(this.usersArray[this.userIndex]);
+        // console.log(this.usersArray[this.userIndex]);
         this.authService.loggedInUser.next(this.loggedInUser);
         //this.currentLoggedInUser.next(this.currentUser);
         
-        this.sendDataToServer();
+        //this.sendDataToServer();
     }
 
     updateTask(index: number, task: Task) {
@@ -67,7 +67,7 @@ export class TodoService {
         //console.log(this.currentUser.todoArray);
         this.authService.loggedInUser.next(this.loggedInUser);
         //this.currentLoggedInUser.next(this.currentUser);
-        this.sendDataToServer();
+        //this.sendDataToServer();
     }
 
     deleteRow(index: number) {
@@ -78,7 +78,7 @@ export class TodoService {
         this.authService.loggedInUser.next(this.loggedInUser);
         //this.currentLoggedInUser.next(this.currentUser);
         console.log("task deleted");
-        this.UpdateDataToServer();
+        // this.UpdateDataToServer();
     }
 
     markAsDone(index: number) {
@@ -86,12 +86,12 @@ export class TodoService {
         console.log("index: " + index);
         this.loggedInUser.todoArray[index].status = "Done";
         //this.currentUser.todoArray[index].status = "Done";
-        this.usersArray[this.userIndex].todoArray[index].status = "Done";
+        // this.usersArray[this.userIndex].todoArray[index].status = "Done";
         console.log("status changed to done");
         // console.log(this.loggedInUser.todoArray[index].status);
         this.authService.loggedInUser.next(this.loggedInUser);
         //this.currentLoggedInUser.next(this.currentUser);
-        this.UpdateDataToServer();
+        //  this.UpdateDataToServer();
     }
 
     deleteMultiple(arr) {
@@ -102,7 +102,7 @@ export class TodoService {
             {
                 console.log("matched: "+i);
                 delete this.loggedInUser.todoArray[i];
-                delete this.usersArray[this.userIndex].todoArray[i];
+                //delete this.usersArray[this.userIndex].todoArray[i];
                 //delete this.currentUser.todoArray[i];
             }
         }
@@ -111,9 +111,9 @@ export class TodoService {
             return element !== null;
         });
 
-        this.usersArray[this.userIndex].todoArray = this.usersArray[this.userIndex].todoArray.filter((element) => {
-            return element !== null;
-        }); 
+        // this.usersArray[this.userIndex].todoArray = this.usersArray[this.userIndex].todoArray.filter((element) => {
+        //     return element !== null;
+        // }); 
         // this.currentUser.todoArray = this.currentUser.todoArray.filter((element) => {
         //     return element !== null;
         // });
@@ -121,11 +121,11 @@ export class TodoService {
         console.log("deleted multiple");
         this.authService.loggedInUser.next(this.loggedInUser);
         //this.currentLoggedInUser.next(this.currentUser);
-        this.UpdateDataToServer();
+        //this.UpdateDataToServer();
     }
 
-    sendDataToServer(){
-        this.http.put("https://angular-assignment-7635b.firebaseio.com/users.json",this.usersArray).subscribe(
+    sendDataToServer(usersArray: User[]){
+        this.http.put("https://todo-angular-assignment.firebaseio.com/users.json",usersArray).subscribe(
             putResponse => {
                 console.log("response from Put reuest: ");
                 console.log(putResponse);
@@ -139,9 +139,9 @@ export class TodoService {
         );
     }
 
-    UpdateDataToServer(){
+    UpdateDataToServer(usersArray: User[]){
         console.log("In UpdateDataToServer()");
-        this.http.put("https://angular-assignment-7635b.firebaseio.com/users.json",this.usersArray).subscribe(
+        this.http.put("https://todo-angular-assignment.firebaseio.com/users.json",usersArray).subscribe(
             putResponse => {
                 console.log("response from Update Put reuest: ");
                 console.log(putResponse);

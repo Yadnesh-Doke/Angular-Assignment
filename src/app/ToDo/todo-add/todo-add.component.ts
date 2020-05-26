@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { HeaderLinks } from 'src/app/Models/header-links.model';
 import { HeaderService } from 'src/app/services/header-service.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { User } from 'src/app/Models/user.model';
 
 @Component({
   selector: 'app-todo-add',
@@ -14,6 +15,8 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class TodoAddComponent implements OnInit {
   todoAddForm: FormGroup;
+  usersArray: User[] = [];
+  userIndex: number;
   today;
   minDate;
   maxRemDate;
@@ -44,6 +47,22 @@ export class TodoAddComponent implements OnInit {
       "reminderDate" : new FormControl(null),
       // "isPublic" : new FormControl("No",Validators.required)
     });
+
+    this.authService.fetchUsers().subscribe(
+      users => {
+        this.usersArray = users.map((user) => {
+          return { ...user, todoArray: user.todoArray ? user.todoArray : [] };
+        });
+        console.log("users array from TODO LIST: ");
+        console.log(this.usersArray);
+        let currUser = JSON.parse(localStorage.getItem("user"));
+        let currentUser = this.usersArray.find(user => user.email === currUser.email);
+        console.log("Current user from TODO LIST");
+        console.log(currentUser);
+        this.userIndex = this.usersArray.indexOf(currentUser);
+        console.log("Current user index from TODO ADD: " + this.userIndex);
+      }
+    );  
 
   }
 
@@ -105,7 +124,7 @@ export class TodoAddComponent implements OnInit {
       this.addTask();
     }
 
-  }
+  }   
 
   addTask(){
     console.log("task will be added to the array...");
@@ -120,6 +139,8 @@ export class TodoAddComponent implements OnInit {
                     "Pending");
 
     this.todoService.addTaskToArray(task);
+    this.usersArray[this.userIndex].todoArray.push(task);
+    this.todoService.sendDataToServer(this.usersArray);
     // this.router.navigate(["/todoList"]);
   }
 

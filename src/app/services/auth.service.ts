@@ -30,7 +30,7 @@ export class AuthService implements OnInit{
     signup(email: string, password: string)
     {
        return this.http.post<AuthResponseData>(
-            "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAnTW9eK6hfGELrbvSdonZ9lLn3DVlMD64",
+            "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA5P6e5XKwvbmUWM4vGe3r4P4RvdAawTWE",
             {
                 email: email,
                 password: password,
@@ -49,7 +49,7 @@ export class AuthService implements OnInit{
 
     storeUser(user: User){
         this.http.post(
-            "https://angular-assignment-7635b.firebaseio.com/users.json",user).subscribe(
+            "https://todo-angular-assignment.firebaseio.com/users.json",user).subscribe(
                 (response) => {
                     console.log(response);
                     this.router.navigate(["/login"]);
@@ -61,7 +61,7 @@ export class AuthService implements OnInit{
 
     login(email: string, password: string){
         return this.http.post<AuthResponseData>(
-            "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAnTW9eK6hfGELrbvSdonZ9lLn3DVlMD64",
+            "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA5P6e5XKwvbmUWM4vGe3r4P4RvdAawTWE",
             {
                 email: email,
                 password: password,
@@ -81,7 +81,7 @@ export class AuthService implements OnInit{
         //     this.usersArray = users;
         // })
        return this.http.get<AuthResponseData>(
-            "https://angular-assignment-7635b.firebaseio.com/users.json"
+            "https://todo-angular-assignment.firebaseio.com/users.json"
          ).pipe(map(responseData => {
             let usersArray = [];
             for(let key in responseData)
@@ -142,7 +142,7 @@ export class AuthService implements OnInit{
         this.usersArray[index].password = password;
         this.usersArray[index].imagePath = imagePath;
 
-        this.http.put("https://angular-assignment-7635b.firebaseio.com/users.json",this.usersArray).subscribe(
+        this.http.put("https://todo-angular-assignment.firebaseio.com/users.json",this.usersArray).subscribe(
             putResponse => {
                 console.log("response from Put reuest: ");
                 console.log(putResponse);

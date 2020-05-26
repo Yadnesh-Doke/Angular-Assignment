@@ -27,7 +27,7 @@ export class TodoListComponent implements OnInit {
   filterTitle: string = "";
   showEmptyError: boolean = false;
   selectedValue: string = "All";
-  currentUser = new BehaviorSubject<User>(null);
+  //currentUser = new BehaviorSubject<User>(null);
   header: HeaderLinks = new HeaderLinks();
 
   constructor(private authService: AuthService,
@@ -48,23 +48,23 @@ export class TodoListComponent implements OnInit {
       console.log("Array: \n" + this.todoArray);
     });
 
-    //   this.authService.fetchUsers().subscribe(
-    //     users => {
-    //        this.usersArray = users.map((user) => {
-    //             return {...user,todoArray: user.todoArray ? user.todoArray : []};
-    //         });
-    //         console.log("users array from TODO LIST: ");
-    //         console.log(this.usersArray);
-    //         let currUser = JSON.parse(localStorage.getItem("user"));
-    //         let currentUser = this.usersArray.find(user => user.email === currUser.email);
-    //         console.log("Current user from TODO LIST");
-    //         console.log(currentUser);
-    //         this.todoArray = currentUser.todoArray;
-    //         this.currentUser.next(currentUser);
-    //         this.userIndex = this.usersArray.indexOf(currentUser);
-    //         console.log("Current user index from TODO LIST: "+this.userIndex);
-    //     }
-    // );
+      this.authService.fetchUsers().subscribe(
+        users => {
+           this.usersArray = users.map((user) => {
+                return {...user,todoArray: user.todoArray ? user.todoArray : []};
+            });
+            console.log("users array from TODO LIST: ");
+            console.log(this.usersArray);
+            let currUser = JSON.parse(localStorage.getItem("user"));
+            let currentUser = this.usersArray.find(user => user.email === currUser.email);
+            console.log("Current user from TODO LIST");
+            console.log(currentUser);
+            // this.todoArray = currentUser.todoArray;
+            // this.currentUser.next(currentUser);
+            this.userIndex = this.usersArray.indexOf(currentUser);
+            console.log("Current user index from TODO LIST: "+this.userIndex);
+        }
+    );
 
   }
 
@@ -80,6 +80,8 @@ export class TodoListComponent implements OnInit {
 
   deleteRow(index: number) {
     this.todoService.deleteRow(index);
+    this.usersArray[this.userIndex].todoArray.splice(index,1);
+    this.todoService.UpdateDataToServer(this.usersArray);
   }
 
   checkThat(i: number) {
@@ -160,8 +162,12 @@ export class TodoListComponent implements OnInit {
         this.enable();
         this.showDone = false;
         this.showDelete = true;
+        this.deleteOpacity = 0.4;
         let head_check = document.querySelector("#head-checkbox") as HTMLInputElement;
         head_check.checked = true ? false : false;
+
+        this.usersArray[this.userIndex].todoArray[i].status = "Done";
+        this.todoService.UpdateDataToServer(this.usersArray);   
       }
     }
   }
@@ -177,10 +183,18 @@ export class TodoListComponent implements OnInit {
         this.enable();
         this.showDone = false;
         this.showDelete = true;
+        this.deleteOpacity = 0.4;
         let head_check = document.querySelector("#head-checkbox") as HTMLInputElement;
         head_check.checked = true ? false : false;
+
+        delete this.usersArray[this.userIndex].todoArray[i];
       }
     }
+
+    this.usersArray[this.userIndex].todoArray = this.usersArray[this.userIndex].todoArray.filter((element) => {
+      return element !== null;
+   });
+   this.todoService.UpdateDataToServer(this.usersArray);
   }
 
 }
