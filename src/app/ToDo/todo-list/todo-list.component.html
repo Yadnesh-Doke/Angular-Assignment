@@ -26,7 +26,7 @@
                             <option value="Office">Office</option>
                             <option value="Other">Other</option>
                         </select>
-                        <input type="search by title" placeholder="Search" id="search-box" class="right-button" [(ngModel)]="filterTitle">
+                        <input type="search" placeholder="Search by title" id="search-box" class="right-button" [(ngModel)]="filterTitle">
                     </div>
                 </div>
 
@@ -43,7 +43,7 @@
                         <th>Delete</th>
                     </tr>
                     <tbody id="table">
-                        <tr *ngFor="let obj of todoArray | filterDropdown:selectedValue | filter:filterTitle; let i = index" >
+                        <tr *ngFor="let obj of todoArray | filter:filterTitle | filterDropdown:selectedValue ; let i = index" >
                            <td><input type="checkbox" class="checkboxes" (click)="checkThat(i)"></td>
                            <td>{{ obj.title }}</td>
                            <td>{{ obj.category }}</td>

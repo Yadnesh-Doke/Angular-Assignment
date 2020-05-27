@@ -48,7 +48,8 @@
                        <p>4.At least one special symbol.</p>
                     </span><br><br>
 
-                    <input type="submit" value="Submit" id="submit-btn" [disabled]="!profileForm.valid || wrongPassword">
+                    <input type="submit" value="Submit" id="submit-btn"
+                    [ngClass]="{'invalid-btn-opacity': !profileForm.valid}" [disabled]="!profileForm.valid || wrongPassword">
                 </form>
             </div>
         </section>

@@ -99,6 +99,10 @@ header h1{
     position:relative;
 }
 
+.invalid-btn-opacity{
+    opacity: 0.4;
+}
+
 #edit-button{
     position: absolute;
     top: 10px;
