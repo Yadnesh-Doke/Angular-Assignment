@@ -44,8 +44,6 @@ export class TodoListComponent implements OnInit {
       this.todoArray = loggedInUser.todoArray;
       this.header.imgSrc = loggedInUser.imagePath;
       this.headerService.headerLinks.next(this.header);
-
-      console.log("Array: \n" + this.todoArray);
     });
 
       this.authService.fetchUsers().subscribe(
@@ -59,22 +57,21 @@ export class TodoListComponent implements OnInit {
             let currentUser = this.usersArray.find(user => user.email === currUser.email);
             console.log("Current user from TODO LIST");
             console.log(currentUser);
-            // this.todoArray = currentUser.todoArray;
+            this.header.imgSrc = currentUser.imagePath;
+            this.todoArray = currentUser.todoArray;
+            this.headerService.headerLinks.next(this.header);
             // this.currentUser.next(currentUser);
             this.userIndex = this.usersArray.indexOf(currentUser);
-            console.log("Current user index from TODO LIST: "+this.userIndex);
         }
     );
 
   }
 
   addNewTask() {
-    console.log("going to add new task.");
     this.router.navigate(["/todoAdd"]);
   }
 
   toEditPage(index: number) {
-    console.log("\nGoing to Todo Edit page: " + index);
     this.router.navigate([index + "/edit"], { relativeTo: this.currentRoute });
   }
 
@@ -114,16 +111,18 @@ export class TodoListComponent implements OnInit {
     let arr = document.querySelectorAll(".checkboxes");
     let ele;
     let head_check = document.querySelector("#head-checkbox") as HTMLInputElement;
-    // alert("head-checkbox: \n"+head_check.checked);
     if (head_check.checked === true) {
-      for (let i = 0; i < arr.length; i++) {
-        ele = arr[i] as HTMLInputElement;
-        ele.checked = true;
+      if(this.todoArray.length !== 0){
+        for (let i = 0; i < arr.length; i++) {
+          ele = arr[i] as HTMLInputElement;
+          ele.checked = true;
+        }
+        this.disable();
+        this.showDelete = false;
+        this.deleteOpacity = 1;
+        this.showDone = true;
       }
-      this.disable();
-      this.showDelete = false;
-      this.deleteOpacity = 1;
-      this.showDone = true;
+      
     }
     else {
       for (let i = 0; i < arr.length; i++) {

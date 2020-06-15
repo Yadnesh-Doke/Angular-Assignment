@@ -20,7 +20,6 @@ export class TodoService {
             // console.log("current user from TODO service:");
             // console.log(this.loggedInUser);
         });
-        console.log("\n IN THE CONSTRUCTOR OF TODO SERVICE.\n")
         this.authService.fetchUsers().subscribe(
             users => {
                this.usersArray = users.map((user) => {
@@ -33,6 +32,7 @@ export class TodoService {
                 let currentUser = this.usersArray.find(user => user.email === currUser.email);
                 console.log("Current user from TODO service");
                 console.log(currentUser);
+                this.loggedInUser = currentUser;
                 //this.currentUser = currentUser;
                 // this.currentLoggedInUser.next(this.currentUser);
                 this.userIndex = this.usersArray.indexOf(currentUser);
@@ -46,13 +46,9 @@ export class TodoService {
         console.log(task);
         this.loggedInUser.todoArray.push(task);
         //this.currentUser.todoArray.push(task);
-        // console.log("this.usersArray[this.userIndex].todoArray: ");
-        // console.log(this.usersArray[this.userIndex].todoArray)
         // this.usersArray[this.userIndex].todoArray.push(task);
         console.log("\nafter a task added:");
         console.log(this.loggedInUser.todoArray);
-        // console.log(this.loggedInUser);
-        // console.log(this.usersArray[this.userIndex]);
         this.authService.loggedInUser.next(this.loggedInUser);
         //this.currentLoggedInUser.next(this.currentUser);
         
@@ -64,7 +60,6 @@ export class TodoService {
         //this.currentUser.todoArray[index] = task;
         this.usersArray[this.userIndex].todoArray[index] = task;
         console.log("After updating task, array is: ");
-        //console.log(this.currentUser.todoArray);
         this.authService.loggedInUser.next(this.loggedInUser);
         //this.currentLoggedInUser.next(this.currentUser);
         //this.sendDataToServer();
@@ -83,12 +78,10 @@ export class TodoService {
 
     markAsDone(index: number) {
         console.log("In mark as done() method");
-        console.log("index: " + index);
         this.loggedInUser.todoArray[index].status = "Done";
         //this.currentUser.todoArray[index].status = "Done";
         // this.usersArray[this.userIndex].todoArray[index].status = "Done";
         console.log("status changed to done");
-        // console.log(this.loggedInUser.todoArray[index].status);
         this.authService.loggedInUser.next(this.loggedInUser);
         //this.currentLoggedInUser.next(this.currentUser);
         //  this.UpdateDataToServer();
@@ -100,7 +93,6 @@ export class TodoService {
             let ele = arr[i] as HTMLInputElement;
             if (ele.checked == true) 
             {
-                console.log("matched: "+i);
                 delete this.loggedInUser.todoArray[i];
                 //delete this.usersArray[this.userIndex].todoArray[i];
                 //delete this.currentUser.todoArray[i];
@@ -129,7 +121,6 @@ export class TodoService {
             putResponse => {
                 console.log("response from Put reuest: ");
                 console.log(putResponse);
-                console.log(this.usersArray);
                 // this.usersChanged.next(this.usersArray.slice());
                 this.router.navigate(["/todoList"]);
             }, error => {
@@ -145,7 +136,6 @@ export class TodoService {
             putResponse => {
                 console.log("response from Update Put reuest: ");
                 console.log(putResponse);
-                console.log(this.usersArray);
             }, error => {
                 console.log("ERROR FROM PUT REQUEST!!!");
                 console.log(error);

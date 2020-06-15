@@ -13,36 +13,47 @@ import { HeaderLinks } from '../Models/header-links.model';
 })
 export class ProfileComponent implements OnInit {
   profileForm: FormGroup;
+  usersArray: User[] = [];
   user: User;
   imagePath;
   wrongPassword: boolean = false;
   isLoading: boolean;
   header: HeaderLinks = new HeaderLinks();
 
-  constructor(private authService: AuthService,private router: Router, private headerService: HeaderService) {
-    console.log("in profie constructor");
-   }
+  constructor(private authService: AuthService, private router: Router, private headerService: HeaderService) {  }
 
   ngOnInit(): void {
-    this.header.profileLink = false;  this.header.todoLink = true;
-    this.header.logoutLink = true;   this.header.loginLink = false;
+    this.header.profileLink = false; this.header.todoLink = true;
+    this.header.logoutLink = true; this.header.loginLink = false;
     this.headerService.headerLinks.next(this.header);
 
     this.authService.loggedInUser.subscribe(user => {
       this.user = user;
     });
+    // this.imagePath = this.user.imagePath;
+
+    this.authService.fetchUsers().subscribe(
+      users => {
+        this.usersArray = users.map((user) => {
+          return { ...user, todoArray: user.todoArray ? user.todoArray : [] };
+        });
+        let currUser = JSON.parse(localStorage.getItem("user"));
+        let currentUser = this.usersArray.find(user => user.email === currUser.email);
+        this.user = currentUser;
+        this.imagePath = this.user.imagePath;
+        this.headerService.headerLinks.next(this.header);
+      }
+    );
+
     this.imagePath = this.user.imagePath;
-    // console.log("imagePath: \n"+this.imagePath);
-    console.log("User: ");
-    console.log(this.user);
-    console.log(this.user.gender);
     this.profileForm = new FormGroup({
-      "firstName" : new FormControl(this.user.firstName,Validators.required),
-      "lastName" : new FormControl(this.user.lastName,Validators.required),
-      "gender" : new FormControl(this.user.gender,Validators.required),
-      "address" : new FormControl(this.user.address,Validators.required),
-      "password" : new FormControl(this.user.password,Validators.required)
+      "firstName": new FormControl(this.user.firstName, Validators.required),
+      "lastName": new FormControl(this.user.lastName, Validators.required),
+      "gender": new FormControl(this.user.gender, Validators.required),
+      "address": new FormControl(this.user.address, Validators.required),
+      "password": new FormControl(this.user.password, Validators.required)
     });
+
   }
 
   onSubmit() {
@@ -51,9 +62,8 @@ export class ProfileComponent implements OnInit {
 
     let ptn = /(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])(?=.*\d)/;
     let password = this.profileForm.value.password;
-    if(password.match(ptn))
-    {
-      this.wrongPassword = false; 
+    if (password.match(ptn)) {
+      this.wrongPassword = false;
       this.user.firstName = this.profileForm.value.firstName;
       this.user.lastName = this.profileForm.value.lastName;
       this.user.gender = this.profileForm.value.gender;
@@ -68,15 +78,15 @@ export class ProfileComponent implements OnInit {
         this.profileForm.value.address,
         password,
         this.imagePath
-        );
+      );
 
-        setTimeout(() => {
-          this.isLoading = false;
-          this.router.navigate(["/todoList"]);
-        },3000);
+      setTimeout(() => {
+        this.isLoading = false;
+        this.router.navigate(["/todoList"]);
+      }, 3000);
       // this.toUpdateData(password,() => this.router.navigate(["../"]));
     }
-    else{
+    else {
       this.wrongPassword = true;
     }
   }
@@ -84,7 +94,6 @@ export class ProfileComponent implements OnInit {
   ProfilePic(event: any) {
     console.log("in profilePic()");
     let profileImage = event.target.files[0];
-    console.log("profileImage: " + profileImage);
     let imagereader = new FileReader();
     imagereader.readAsDataURL(profileImage);
 
@@ -93,5 +102,14 @@ export class ProfileComponent implements OnInit {
       (<HTMLImageElement>document.getElementById("profile")).src = this.imagePath;
       console.log(this.imagePath);
     };
+  }
+
+  checkRadio(value) {
+    if (value === 1) {
+      (<HTMLInputElement>document.querySelector("#male")).checked = true;
+    }
+    else if (value === 2) {
+      (<HTMLInputElement>document.querySelector("#female")).checked = true;
+    }
   }
 }

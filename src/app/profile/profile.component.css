@@ -161,6 +161,22 @@ input,textarea{
     margin-left:39px;
 }
 
+#fnameMsg{
+    margin-left: 122px;
+}
+
+#lnameMsg{
+    margin-left: 122px;
+}
+
+#addressMsg{
+    margin-left: 125px;
+}
+
+#paswdMsg p{
+    margin-left: 125px;
+}
+
 #profile-image{
     /* display:none; */
     margin-left:175px;

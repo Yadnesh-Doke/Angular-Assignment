@@ -7,7 +7,6 @@
 
     <body >
         <section class="user-profile">
-            <!-- <button id="edit-button" onclick="edit()">Edit</button> -->
             <div *ngIf="isLoading" style="text-align: center;">
                 <app-loading-spinner></app-loading-spinner>
             </div>
@@ -18,29 +17,29 @@
                 <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
                     <label for="fname">First Name:</label>
                     <input type="text" id="fname" formControlName="firstName" #fname>
-                    <span class="error-msg" *ngIf="!fname.valid && fname.touched">
-                        Please enter a your first name!
+                    <span class="error-msg" id="fnameMsg" *ngIf="profileForm.get('firstName').errors && profileForm.get('firstName').touched">
+                        Please enter your first name!
                     </span><br><br>
 
                     <label for="lname">Last Name:</label>
                     <input type="text" id="lname" formControlName="lastName" #lname>
-                    <span class="error-msg" *ngIf="!lname.valid && lname.touched">
+                    <span class="error-msg" id="lnameMsg" *ngIf="profileForm.get('lastName').errors && profileForm.get('lastName').touched">
                         Please enter your last name!
                     </span><br><br>
 
                     <label for="gender">Gender:</label>
-                    <span onclick="checkRadio(1)"> <input type="radio" name="gender" value="male" id="male" formControlName="gender" >Male </span>
-                    <span onclick="checkRadio(2)"> <input type="radio" name="gender" value="female" id="female" formControlName="gender" >Female<br><br> </span>
+                    <span (click)="checkRadio(1)"> <input type="radio" name="gender" value="male" id="male" formControlName="gender" >Male </span>
+                    <span (click)="checkRadio(2)"> <input type="radio" name="gender" value="female" id="female" formControlName="gender" >Female<br><br> </span>
 
                     <label for="address">Address:</label>
                     <textarea id="address" formControlName="address" #address></textarea>
-                    <span class="error-msg" *ngIf="!address.valid && address.touched">
+                    <span class="error-msg" id="addressMsg" *ngIf="profileForm.get('address').errors && profileForm.get('address').touched">
                         Please enter the address!
                     </span><br><br>
 
                     <label for="passwd">Password:</label>
                     <input type="text" id="passwd" formControlName="password" #pswd>
-                    <span class="error-msg" *ngIf="!pswd.valid && pswd.touched || wrongPassword">
+                    <span class="error-msg" id="paswdMsg" *ngIf="(profileForm.get('password').errors && profileForm.get('password').touched) || wrongPassword">
                         <p>Password must contain:</p>
                        <p>1.At least one uppercase letter</p>
                        <p>2.at least One lowercase letter</p>

@@ -30,6 +30,11 @@ export class LoginComponent implements OnInit {
   }
 
   login(form: NgForm) {
+    if(form.value.email === "" || form.value.password === "")
+    {
+        alert("Please fill all the fields");
+        return;
+    }
     this.error = null;
     console.log("from login: " + form.value);
     
@@ -38,9 +43,6 @@ export class LoginComponent implements OnInit {
         this.usersArray = users.map((user) => {
           return { ...user, todoArray: user.todoArray ? user.todoArray : [] };
         });
-        console.log("users array: ");
-        // this.usersChanged.next(this.usersArray.slice());
-        console.log(this.usersArray);
         this.isLoading = true;
         let email = form.value.email;
         let password = form.value.password;
@@ -50,9 +52,7 @@ export class LoginComponent implements OnInit {
             let loggedInUser = this.usersArray.find(x => x.email === response.email);
             console.log("logged in user: ");
             console.log(loggedInUser);
-            // loggedInUser.loginStatus = true;
             this.authService.loggedInUser.next(loggedInUser);
-            console.log("CURRENT USER EMITTED");
 
             localStorage.setItem("user", JSON.stringify({
               email: response.email,

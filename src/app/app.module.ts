@@ -11,7 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { LoadingSpinnerComponent } from './shared/loading-spinner.component';
 import { ProfileComponent } from './profile/profile.component';
 import { TodoListComponent } from './ToDo/todo-list/todo-list.component';
-import { TodoAddComponent } from './ToDO/todo-add/todo-add.component';
+import { TodoAddComponent } from './ToDo/todo-add/todo-add.component';
 import { TodoEditComponent } from './ToDo/todo-edit/todo-edit.component';
 import { FilterPipe } from './ToDo/todo-list/filter.pipe';
 import { FilterDropdownPipe } from './ToDo/todo-list/filter-dropdown.pipe';

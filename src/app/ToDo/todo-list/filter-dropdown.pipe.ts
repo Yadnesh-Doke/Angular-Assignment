@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Task } from 'src/app/Models/task.model';
-import { concatAll } from 'rxjs/operators';
 import { TodoListComponent } from './todo-list.component';
 
 @Pipe({

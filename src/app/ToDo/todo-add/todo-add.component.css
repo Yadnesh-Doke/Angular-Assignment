@@ -182,9 +182,9 @@ textarea{
     padding:5px 10px;
 }
 
-/* .reminder{
-    display:none;
-} */
+.reminder{
+    margin-bottom: 27px;
+}
 
 .error-msg{
     color:red;

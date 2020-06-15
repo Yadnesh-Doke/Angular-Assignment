@@ -15,24 +15,16 @@ export class RegisterComponent implements OnInit {
   @ViewChild('submitBtn', { static: true }) submitBtn: ElementRef;
   @ViewChild("confirmPassword") confirmPassword: ElementRef;
   gender: string = "male";
-  imgdata;
-  wrongPassword = false;
-  diffPassword = false;
-  isLoading = false;
+  imgdata = null;
+  wrongPassword: boolean = false;
+  diffPassword: boolean = false;
+  isLoading: boolean = false;
   error: string = null;
   header: HeaderLinks = new HeaderLinks();
 
   constructor(private authService: AuthService,private router: Router, private headerService: HeaderService) { }
 
   ngOnInit(): void {
-    // console.log("ref: "+this.submitBtn);
-    // if(this.submitBtn.nativeElement.disabled === true)
-    // {
-    //   document.getElementById("submit-btn").style.opacity = "0.5";
-    // }
-    // else{
-    //   document.getElementById("submit-btn").style.opacity = "1";
-    // }
     this.header.profileLink = false;  this.header.todoLink = false;
     this.header.logoutLink = false;   this.header.loginLink = true;
     this.headerService.headerLinks.next(this.header);
@@ -40,10 +32,10 @@ export class RegisterComponent implements OnInit {
 
   getGender(event: any) {
     this.gender = event.target.value;
-    console.log("gender: " + this.gender);
   }
 
   onSubmit(form: NgForm) {
+    
     this.error = null;
     console.log(form);
     let email = form.value.email;
@@ -53,6 +45,12 @@ export class RegisterComponent implements OnInit {
     let imagePath = this.imgdata;
     let password = form.value.password;
     // this.gender = form.controls['gender'].value;
+    if(email === "" || fname === "" || lname === "" || address === "" || imagePath === null || password === "")
+    {
+      alert("Please fill all the fields. All the fields are reuired.");
+      return;
+    }
+
     console.log("gender from register: "+this.gender);
     let confirmPassword = this.confirmPassword.nativeElement.value;
 
@@ -107,8 +105,16 @@ export class RegisterComponent implements OnInit {
     imagereader.onload = () => {
       this.imgdata = imagereader.result;
       (<HTMLImageElement>document.getElementById("profile")).src = this.imgdata;
-      // console.log(this.imgdata);
     };
+  }
+
+  checkRadio(value){
+    if(value === 1){
+      (<HTMLInputElement>document.querySelector("#M")).checked = true;
+    }
+    else if(value === 2){
+      (<HTMLInputElement>document.querySelector("#F")).checked = true;
+    }
   }
 
 }

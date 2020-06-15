@@ -41,7 +41,6 @@ export class TodoEditComponent implements OnInit {
     this.header.profileLink = false;  this.header.todoLink = true;
     this.header.logoutLink = true;   this.header.loginLink = false;
     
-     console.log("in edit page");
      this.authService.loggedInUser.subscribe(lUser => {
       this.user = lUser;
       this.header.imgSrc = lUser.imagePath;
@@ -58,27 +57,29 @@ export class TodoEditComponent implements OnInit {
       console.log("index from observable: " + this.editIndex);
     });
 
-    console.log(this.user.todoArray[this.editIndex]);
-    this.editingTask = this.user.todoArray[this.editIndex];
-
-    this.setRanges();
-    this.createForm();
+    // this.editingTask = this.user.todoArray[this.editIndex];
    
     this.authService.fetchUsers().subscribe(
       users => {
         this.usersArray = users.map((user) => {
           return { ...user, todoArray: user.todoArray ? user.todoArray : [] };
         });
-        console.log("users array from TODO LIST: ");
-        console.log(this.usersArray);
         let currUser = JSON.parse(localStorage.getItem("user"));
         let currentUser = this.usersArray.find(user => user.email === currUser.email);
-        console.log("Current user from TODO LIST");
-        console.log(currentUser);
+        this.user = currentUser;
+        this.header.imgSrc = currentUser.imagePath;
+        this.headerService.headerLinks.next(this.header);
         this.userIndex = this.usersArray.indexOf(currentUser);
-        console.log("Current user index from TODO ADD: " + this.userIndex);
+        this.editingTask = this.user.todoArray[this.editIndex];
+        console.log("Current user index from TODO EDIT: " + this.userIndex);
+        this.setRanges();
+        this.createForm();
       }
     );
+
+    this.editingTask = this.user.todoArray[this.editIndex];
+    this.setRanges();
+    this.createForm();
   }
 
   setRanges(){
@@ -103,7 +104,6 @@ export class TodoEditComponent implements OnInit {
       "dueDate": new FormControl(this.editingTask.dueDate, Validators.required),
       "reminderValue": new FormControl(this.editingTask.reminderValue, Validators.required),
       "reminderDate": new FormControl(this.editingTask.reminderDate),
-      // "isPublic": new FormControl(this.editingTask.isPublic, Validators.required)
     });
   }
 
@@ -125,7 +125,6 @@ export class TodoEditComponent implements OnInit {
 
   isReminder(event: any) {
     this.editForm.value.reminderValue = event.target.value;
-    console.log("isReminder: " + this.editForm.value.reminderValue);
     this.reminderEmpty = false;
     if (this.editForm.value.reminderValue === "yes") {
       this.showRemiderDate = true;
@@ -155,7 +154,6 @@ export class TodoEditComponent implements OnInit {
                     this.editForm.value.dueDate,
                     this.editForm.value.reminderValue,
                     this.editForm.value.reminderDate,
-                    // this.editForm.value.isPublic,
                     "Pending");
     this.todoService.updateTask(this.editIndex,task);
     this.usersArray[this.userIndex].todoArray[this.editIndex] = task;

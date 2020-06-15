@@ -46,8 +46,8 @@
 
                 <div class="control-container">
                     <label for="gender">Gender:</label>
-                    <span > <input type="radio" name="gender" value="male" [ngModel]="gender" id="M" (change)="getGender($event)" checked required>Male </span>
-                    <span > <input type="radio" name="gender" value="female" [ngModel]="gender" id="F" (change)="getGender($event)" required>Female </span>
+                    <span (click) = "checkRadio(1)"> <input type="radio" name="gender" value="male" [ngModel]="gender" id="M" (change)="getGender($event)" checked required>Male </span>
+                    <span (click) = "checkRadio(2)"> <input type="radio" name="gender" value="female" [ngModel]="gender" id="F" (change)="getGender($event)" required>Female </span>
                     <span class="error-msg"></span>
                 </div>
                 
@@ -94,7 +94,7 @@
 
                 <div class="control-container">
                     <input type="submit" value="Register" id="submit-btn" 
-                    [ngClass]="{'invalid-btn-opacity': !f.valid}" #submitBtn [disabled]="!f.valid">
+                     #submitBtn>
                 </div>
             </form>
         </div>

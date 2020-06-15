@@ -167,6 +167,10 @@ input[type="submit"]{
     float:right;
 }
 
+.reminder{
+    margin-bottom: 27px;
+}
+
 textarea{
     height:70px;
     padding:5px 10px;
@@ -174,12 +178,15 @@ textarea{
 
 .error-msg{
     color:red;
-    display:none;
 }
 
 label {
     color: white;
     font-size: 20px;
+}
+
+.invalid-btn-opacity{
+    opacity: 0.4;
 }
 
 input.ng-invalid.ng-touched,

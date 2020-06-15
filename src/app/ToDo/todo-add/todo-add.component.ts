@@ -23,6 +23,9 @@ export class TodoAddComponent implements OnInit {
   minDue: boolean = false;
   showRemiderDate: boolean = false;
   reminderEmpty: boolean = false;
+  startDateSet: boolean = false;
+  dueDateSet: boolean = false;
+  disableReminderDate: boolean = (this.startDateSet && this.dueDateSet) ? false : true;
   isLoading: boolean = false;
   header: HeaderLinks = new HeaderLinks();
 
@@ -44,8 +47,7 @@ export class TodoAddComponent implements OnInit {
       "startDate" : new FormControl(null,Validators.required),
       "dueDate" : new FormControl(null,Validators.required),
       "reminderValue" : new FormControl("no",Validators.required),
-      "reminderDate" : new FormControl(null),
-      // "isPublic" : new FormControl("No",Validators.required)
+      "reminderDate" : new FormControl({value:'', disabled:this.disableReminderDate}),
     });
 
     this.authService.fetchUsers().subscribe(
@@ -53,12 +55,12 @@ export class TodoAddComponent implements OnInit {
         this.usersArray = users.map((user) => {
           return { ...user, todoArray: user.todoArray ? user.todoArray : [] };
         });
-        console.log("users array from TODO LIST: ");
-        console.log(this.usersArray);
         let currUser = JSON.parse(localStorage.getItem("user"));
         let currentUser = this.usersArray.find(user => user.email === currUser.email);
         console.log("Current user from TODO LIST");
         console.log(currentUser);
+        this.header.imgSrc = currentUser.imagePath;
+        this.headerService.headerLinks.next(this.header);
         this.userIndex = this.usersArray.indexOf(currentUser);
         console.log("Current user index from TODO ADD: " + this.userIndex);
       }
@@ -67,6 +69,15 @@ export class TodoAddComponent implements OnInit {
   }
 
   setMinDate(){
+    this.startDateSet = true;
+    // this.disableReminderDate = (this.startDateSet && this.dueDateSet) ? false : true;
+    if(this.startDateSet && this.dueDateSet)
+    {
+      this.todoAddForm.controls['reminderDate'] .enable();
+    }
+    else{
+      this.todoAddForm.controls['reminderDate'] .disable();
+    }
     this.minDate = this.todoAddForm.value.startDate;
     if(this.todoAddForm.value.dueDate === null)
     {}
@@ -79,13 +90,21 @@ export class TodoAddComponent implements OnInit {
   }
 
   setMaxRem(){
+    this.dueDateSet = true;
+    // this.disableReminderDate = (this.startDateSet && this.dueDateSet) ? false : true;
+    if(this.startDateSet && this.dueDateSet)
+    {
+      this.todoAddForm.controls['reminderDate'] .enable();
+    }
+    else{
+      this.todoAddForm.controls['reminderDate'] .disable();
+    }
     this.minDue = false;
     this.maxRemDate = this.todoAddForm.value.dueDate;
   }
 
   isReminder(event: any){
     this.todoAddForm.value.reminderValue = event.target.value;
-    console.log("isReminder: "+ this.todoAddForm.value.reminderValue);
     this.reminderEmpty = false;
     if(this.todoAddForm.value.reminderValue === "yes"){
       this.showRemiderDate = true;
@@ -107,11 +126,10 @@ export class TodoAddComponent implements OnInit {
     console.log(this.todoAddForm);
     if(this.todoAddForm.value.reminderValue === "yes")
     {
-      console.log("inside if yes");
-        if(this.todoAddForm.value.reminderDate === null)
+        if(this.todoAddForm.value.reminderDate === "")
         {
-          console.log("in if empty");
           this.reminderEmpty = true;
+          this.isLoading = false;
         }
         else{
           this.reminderEmpty = false;
@@ -127,7 +145,6 @@ export class TodoAddComponent implements OnInit {
   }   
 
   addTask(){
-    console.log("task will be added to the array...");
     let task: Task;
     task = new Task(this.todoAddForm.value.title,
                     this.todoAddForm.value.category,
@@ -135,13 +152,21 @@ export class TodoAddComponent implements OnInit {
                     this.todoAddForm.value.dueDate,
                     this.todoAddForm.value.reminderValue,
                     this.todoAddForm.value.reminderDate,
-                    // this.todoAddForm.value.isPublic,
                     "Pending");
 
     this.todoService.addTaskToArray(task);
     this.usersArray[this.userIndex].todoArray.push(task);
     this.todoService.sendDataToServer(this.usersArray);
     // this.router.navigate(["/todoList"]);
+  }
+
+  checkRadio(value){
+    if(value === 1){
+      (<HTMLInputElement>document.querySelector("#yes")).checked = true;
+    }
+    else if(value === 2){
+      (<HTMLInputElement>document.querySelector("#no")).checked = true;
+    }
   }
 
 }

@@ -4,7 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { TodoListComponent } from './ToDo/todo-list/todo-list.component';
-import { TodoAddComponent } from './ToDO/todo-add/todo-add.component';
+import { TodoAddComponent } from './ToDo/todo-add/todo-add.component';
 import { TodoEditComponent } from './ToDo/todo-edit/todo-edit.component';
 import { AuthGuard } from './services/Auth.guard';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';

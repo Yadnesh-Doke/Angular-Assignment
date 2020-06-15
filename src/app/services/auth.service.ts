@@ -5,51 +5,56 @@ import { Router } from '@angular/router';
 import { catchError, map } from 'rxjs/operators'
 import { throwError, Subject, BehaviorSubject } from 'rxjs';
 
-export interface AuthResponseData{
+export interface AuthResponseData {
     idToken: string,
     email: string,
     refreshToken: string,
     expiresIn: string,
     localId: string,
-    registered?: boolean	
+    registered?: boolean
 }
 
-@Injectable({providedIn: 'root'})
-export class AuthService implements OnInit{
+@Injectable({ providedIn: 'root' })
+export class AuthService implements OnInit {
     usersArray: User[] = [];
     usersChanged = new Subject<User[]>();
     loggedInUser = new BehaviorSubject<User>(null);
 
-    constructor(private http: HttpClient,private router: Router){}
+    constructor(private http: HttpClient, private router: Router) { 
+    
+    }
 
-    ngOnInit(){
+    ngOnInit() {
+        this.fetchUsersArray();
         console.log("from auth service: ");
         console.log(this.usersArray);
     }
 
-    signup(email: string, password: string)
-    {
-       return this.http.post<AuthResponseData>(
+    signup(email: string, password: string) {
+        return this.http.post<AuthResponseData>(
             "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA5P6e5XKwvbmUWM4vGe3r4P4RvdAawTWE",
             {
                 email: email,
                 password: password,
-                returnSecureToken: true 
+                returnSecureToken: true
             })
             .pipe(catchError(errorRes => {
                 let errorMessage = "An Error Occured!";
-                switch(errorRes.error.error.message){
+                switch (errorRes.error.error.message) {
                     case "EMAIL_EXISTS":
-                        errorMessage = "This email already exists!"
+                        errorMessage = "This email already exists!";
+                    default:
+                        console.log(errorRes.error.error.message);
+
                 }
                 return throwError(errorMessage);
             })
-        );
+            );
     }
 
-    storeUser(user: User){
+    storeUser(user: User) {
         this.http.post(
-            "https://todo-angular-assignment.firebaseio.com/users.json",user).subscribe(
+            "https://todo-angular-assignment.firebaseio.com/users.json", user).subscribe(
                 (response) => {
                     console.log(response);
                     this.router.navigate(["/login"]);
@@ -59,7 +64,7 @@ export class AuthService implements OnInit{
             );
     }
 
-    login(email: string, password: string){
+    login(email: string, password: string) {
         return this.http.post<AuthResponseData>(
             "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA5P6e5XKwvbmUWM4vGe3r4P4RvdAawTWE",
             {
@@ -68,39 +73,42 @@ export class AuthService implements OnInit{
                 returnSecureToken: true
             }
         )
-        .pipe(catchError(errorRes => {
-            let errorMessage = "Please enter valid credentials!"
-            if(errorRes.error.error.message){
-                return throwError(errorMessage);
-            }
-        }));
+            .pipe(catchError(errorRes => {
+                let errorMessage = "Please enter valid credentials!"
+                if (errorRes.error.error.message === "EMAIL_NOT_FOUND") {
+                    errorMessage = "Please enter valid Email address."
+                    return throwError(errorMessage);
+                }
+                else if (errorRes.error.error.message === "INVALID_PASSWORD") {
+                    errorMessage = "Please enter valid Password."
+                    return throwError(errorMessage);
+                }
+            }));
     }
 
-    fetchUsers(){
+    fetchUsers() {
         // this.usersChanged.subscribe((users: User[]) => {
         //     this.usersArray = users;
         // })
-       return this.http.get<AuthResponseData>(
+        return this.http.get<AuthResponseData>(
             "https://todo-angular-assignment.firebaseio.com/users.json"
-         ).pipe(map(responseData => {
+        ).pipe(map(responseData => {
             let usersArray = [];
-            for(let key in responseData)
-            {
-                if(responseData.hasOwnProperty(key))
-                {
+            for (let key in responseData) {
+                if (responseData.hasOwnProperty(key)) {
                     console.log("if hasOwnProperty");
-                    usersArray.push({ ...responseData[key], id:key});
+                    usersArray.push({ ...responseData[key], id: key });
                 }
             }
             return usersArray;
         }));
     }
 
-    fetchUsersArray(){
+    fetchUsersArray() {
         this.fetchUsers().subscribe(
             users => {
-               this.usersArray = users.map((user) => {
-                    return {...user,todoArray: user.todoArray ? user.todoArray : []};
+                this.usersArray = users.map((user) => {
+                    return { ...user, todoArray: user.todoArray ? user.todoArray : [] };
                 });
                 console.log("users array: ");
                 // this.usersChanged.next(this.usersArray.slice());
@@ -110,31 +118,20 @@ export class AuthService implements OnInit{
     }
 
     addUserToArray(user: User) {
-        // this.usersChanged.subscribe((users: User[]) => {
-        //     this.usersArray = users;
-        // });
         this.usersArray.push(user);
-        console.log("in add user to array");
-        // this.usersChanged.next(this.usersArray.slice());
     }
 
-    getUsers(){
+    getUsers() {
         return this.usersArray.slice();
     }
 
-    updateData(firstName: string,lastName: string,gender: string,address: string,password: string,imagePath: string){
+    updateData(firstName: string, lastName: string, gender: string, address: string, password: string, imagePath: string) {
         // this.usersChanged.subscribe((users: User[]) => {
         //     this.usersArray = users;
         // });
         let currUser = JSON.parse(localStorage.getItem("user"));
-        console.log("currUser: "+currUser);
-        // let currentUser = this.usersArray.find(user => user.loginStatus === true);
         let currentUser = this.usersArray.find(user => user.email === currUser.email);
-        console.log("current User is: ");
-        console.log(currentUser);
         let index: number = this.usersArray.indexOf(currentUser);
-        console.log("index: ");
-        console.log(index);
         this.usersArray[index].firstName = firstName;
         this.usersArray[index].lastName = lastName;
         this.usersArray[index].gender = gender;
@@ -142,11 +139,10 @@ export class AuthService implements OnInit{
         this.usersArray[index].password = password;
         this.usersArray[index].imagePath = imagePath;
 
-        this.http.put("https://todo-angular-assignment.firebaseio.com/users.json",this.usersArray).subscribe(
+        this.http.put("https://todo-angular-assignment.firebaseio.com/users.json", this.usersArray).subscribe(
             putResponse => {
                 console.log("response from Put reuest: ");
                 console.log(putResponse);
-                console.log(this.usersArray);
                 // this.usersChanged.next(this.usersArray.slice());
                 // this.router.navigate(["../"]);
             }, error => {
