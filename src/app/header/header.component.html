@@ -1,0 +1,13 @@
+<header>
+    <h1>ToDo App</h1>
+    <div class="header-nav">
+        <ul>
+            <li *ngIf="profileLink"><a routerLink="/profile"> <img [src]="imgSrc" alt="img" id="profile-image"> </a></li>
+            <li id="profile-link-li" *ngIf="profileLink"><a id="profile-link" routerLink="/profile">Profile</a></li>
+            <li *ngIf="todoLink"><a routerLink="/todoList">Todo List</a></li>
+            <li *ngIf="logoutLink"><a routerLink="/login" (click)="logout()">Log Out</a></li>
+            <li *ngIf="loginLink"><a routerLink="/login">Login</a></li>
+        </ul>
+    </div>
+    <div class="clear"></div>
+</header>

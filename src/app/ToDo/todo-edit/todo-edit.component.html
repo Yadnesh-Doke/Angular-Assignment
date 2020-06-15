@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ToDo-Add</title>
+    <meta charset="UTF-8">
+    <!-- <link rel="stylesheet" type="text/css" href="css/reset.css">
+        <link rel="stylesheet" type="text/css" href="css/addNew-todo-style.css"> -->
+</head>
+
+<body>
+    <section class="todo-add">
+        <div *ngIf="isLoading" style="text-align: center;">
+            <app-loading-spinner></app-loading-spinner>
+        </div>
+        <div class="add-task" *ngIf="!isLoading">
+            <form (ngSubmit)="onSubmit()" [formGroup]="editForm">
+                <div class="control-container">
+                    <label for="title">Title:</label><br>
+                    <input type="text" id="title" placeholder="Enter title" formControlName="title" #titleName>
+                    <span class="error-msg" *ngIf="editForm.get('title').errors && editForm.get('title').touched">
+                        Please enter the title!
+                    </span>
+                </div>
+                
+                <div class="control-container">
+                    <label for="category">Category:</label><br>
+                    <select id="category" formControlName="category">
+                        <option value="Office">Office</option>
+                        <option value="Personal">Personal</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="control-container">
+                    <label for="start-date">Start date:</label>
+                    <input type="date" id="start-date" (change)="setMinDate()" min="{{today}}"
+                        formControlName="startDate" #startDate >
+                </div>
+
+                <div class="control-container">
+                    <label for="due-date">Due date:</label><br>
+                    <input type="date" id="due-date" min="{{minDate}}" (change)="setMaxRem()" formControlName="dueDate">
+                    <span class="error-msg" id="error-greaterStart" *ngIf="minDue">Due date cannot be smaller than start
+                        date
+                    </span>
+                </div>
+
+                <div class="control-container">
+                    <label>Is Reminder:</label>
+                    <span>
+                        <input type="radio" name="reminderValue" value="yes" id="yes" (change)="isReminder($event)"
+                            formControlName="reminderValue">Yes
+                    </span>
+                    <span>
+                        <input type="radio" name="reminderValue" value="no" id="no" (change)="isReminder($event)"
+                            formControlName="reminderValue">No
+                    </span>
+                </div>
+
+                <div class="control-container reminder" *ngIf="showRemiderDate">
+                    <label for="reminder-date" *ngIf="showRemiderDate">Reminder date:</label><br>
+                    <input type="date" id="reminder-date" min="{{minDate}}" max="{{maxRemDate}}"
+                        formControlName="reminderDate" *ngIf="showRemiderDate">
+                    <span class="error-msg" id="error-reminderEmpty" *ngIf="reminderEmpty">Reminder date should not be
+                        empty
+                    </span>
+                </div>
+
+                <input type="submit" value="Submit" [ngClass]="{'invalid-btn-opacity': !editForm.valid}"
+                 [disabled]="!editForm.valid && editForm.touched">
+
+            </form>
+        </div>
+    </section>
+</body>
+
+</html>

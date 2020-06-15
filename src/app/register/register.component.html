@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- <title>ToDo-Register</title> -->
+        <meta charset="UTF-8">
+        <!-- <link rel="stylesheet" type="text/css" href="css/reset.css">
+        <link rel="stylesheet" type="text/css" href="css/register-style.css"> -->
+    </head>
+
+    <body>
+        <div *ngIf="isLoading" style="text-align: center;">
+            <app-loading-spinner></app-loading-spinner>
+        </div>
+        <div class="alert" *ngIf="error">
+            <p> {{ error }} </p>
+        </div>
+        <div class="register-form" *ngIf="!isLoading">
+            <h1>Register Yourself</h1>
+            <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+                <div class="control-container">
+                    <label for="email">Email:</label><br>
+                    <input type="email" id="email" placeholder="Enter email address" 
+                     ngModel name="email" required email #email="ngModel">
+                    <span *ngIf="!email.valid && email.touched" class="error-msg">
+                         Please enter a valid email address
+                    </span>
+                </div>
+                
+                <div class="control-container">
+                    <label for="fname" id="label-fname">First Name:</label><br>
+                    <input type="text" id="fname" placeholder="Enter First Name"
+                     ngModel name="firstName" required #fname="ngModel">
+                    <span class="error-msg" *ngIf="!fname.valid && fname.touched">
+                        Please enter a your first name!
+                    </span>
+                </div>
+               
+                <div class="control-container">
+                    <label for="lname">Last Name:</label><br>
+                    <input type="text" id="lname" placeholder="Enter Last Name"
+                     ngModel name="lastName" required #lname="ngModel"> 
+                    <span class="error-msg" *ngIf="!lname.valid && lname.touched">
+                        Please enter your last name!
+                    </span>
+                </div>
+
+                <div class="control-container">
+                    <label for="gender">Gender:</label>
+                    <span (click) = "checkRadio(1)"> <input type="radio" name="gender" value="male" [ngModel]="gender" id="M" (change)="getGender($event)" checked required>Male </span>
+                    <span (click) = "checkRadio(2)"> <input type="radio" name="gender" value="female" [ngModel]="gender" id="F" (change)="getGender($event)" required>Female </span>
+                    <span class="error-msg"></span>
+                </div>
+                
+                <div class="control-container address-container">
+                    <label for="address">Address:</label><br>
+                    <textarea id="address" placeholder="Enter your address"
+                     ngModel name="address" required #address="ngModel"></textarea>
+                    <span class="error-msg" *ngIf="!address.valid && address.touched">
+                        Please enter the address!
+                    </span>
+                </div>
+
+                <div class="control-container">
+                    <label for="profile-image">Profile Photo:</label><br>
+                    <img src="../../assets/profileIcon.png" id="profile">
+                    <input type="file" id="profile-image" (change)="ProfilePic($event)"
+                     ngModel name="imagePath" required #profilePic="ngModel"><br>
+                    <span class="error-msg" *ngIf="!profilePic.valid && profilePic.touched">
+                        Please select a profile picture!
+                    </span>
+                </div>
+
+                <div class="control-container">
+                    <label for="passwd">Password:</label><br>
+                    <input type="password" id="passwd" placeholder="Enter password"
+                        ngModel name="password" required minlength="8" #password="ngModel">
+                    <span class="error-msg" *ngIf="(!password.valid && password.touched) || wrongPassword">
+                        <p>Password must contain:</p>
+                       <p>1.At least one uppercase letter</p>
+                       <p>2.at least One lowercase letter</p>
+                       <p>3.at least one digit</p>
+                       <p>4.At least one special symbol.</p>
+                    </span>
+                </div>
+
+                <div class="control-container">
+                    <label for="confirm-passwd">Confirm Password:</label><br>
+                    <input type="password" id="confirm-passwd" placeholder="Re-enter your password" 
+                        minlength="8" ngModel name="confirmPassword" #confirmPassword required>
+                    <span class="error-msg" *ngIf="(!confirmPassword.valid && confirmPassword.touched) || diffPassword">
+                        Please re-enter the same password.
+                    </span>
+                </div>
+
+                <div class="control-container">
+                    <input type="submit" value="Register" id="submit-btn" 
+                     #submitBtn>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
